@@ -15,6 +15,10 @@
 <h2>Show User List</h2>
 <a href="users?action=create">Create new user</a>
 <br>
+<form action="/users">
+    <input type="text" placeholder="Enter country ..." name="key">
+    <button>Search</button>
+</form>
 <c:forEach items="${list}" var="user">
     ${user.id}
     | ${user.name}

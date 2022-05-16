@@ -31,8 +31,19 @@ public class UserServlet extends HttpServlet {
             case "delete":
                 showDeleteForm(request,response);
                 break;
+//            case "search":
+//                try {
+//                    showList(request,response);
+//                } catch (SQLDataException e) {
+//                    e.printStackTrace();
+//                }
+//                break;
             default:
-                showList(request, response);
+                try {
+                    showList(request, response);
+                } catch (SQLDataException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
@@ -57,9 +68,15 @@ public class UserServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLDataException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
-        List<User> userList = userDAO.selectAll();
+        List<User> userList;
+        String key = request.getParameter("key");
+        if (key ==null || key==""){
+            userList = userDAO.selectAll();
+        }else {
+            userList = userDAO.findByCountry(key);
+        }
         request.setAttribute("list", userList);
         dispatcher.forward(request, response);
     }

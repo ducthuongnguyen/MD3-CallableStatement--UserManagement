@@ -99,5 +99,29 @@ public class UserDAO implements IUserDAO {
         }
         return rowUpdated;
     }
+
+    @Override
+    public List<User> findByCountry(String country) throws SQLDataException {
+        List<User> result = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("select * from users where country like ?")) {
+            preparedStatement.setString(1, "%"+country+"%");
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String country1 = rs.getString("country");
+               result.add(new User(id,name,email,country1));
+            }
+        } catch (SQLException e) {
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> orderByName(String name) {
+        return null;
+    }
 }
 
