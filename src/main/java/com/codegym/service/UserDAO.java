@@ -15,7 +15,7 @@ public class UserDAO implements IUserDAO {
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users?useSSL=false", "root", "123456");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", "root", "123456");
         } catch (SQLException | ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -59,7 +59,6 @@ public class UserDAO implements IUserDAO {
         List<User> users = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("select * from users")) {
-            System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -120,8 +119,21 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public List<User> orderByName(String name) {
-        return null;
+    public List<User> orderByName() {
+        List<User> result = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("select * from users order by name")) {
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name1 = rs.getString("name");
+                String email = rs.getString("email");
+                String country = rs.getString("country");
+                result.add(new User(id,name1,email,country));
+            }
+        } catch (SQLException e) {
+        }
+        return result;
     }
 }
 

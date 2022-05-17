@@ -18,5 +18,5 @@ public interface IUserDAO {
 
     public List<User> findByCountry(String country) throws SQLDataException;
 
-    public List<User> orderByName(String name);
+    public List<User> orderByName();
 }

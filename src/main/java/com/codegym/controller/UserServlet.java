@@ -29,14 +29,10 @@ public class UserServlet extends HttpServlet {
                 showEditForm(request, response);
                 break;
             case "delete":
-                showDeleteForm(request,response);
+                showDeleteForm(request, response);
                 break;
-//            case "search":
-//                try {
-//                    showList(request,response);
-//                } catch (SQLDataException e) {
-//                    e.printStackTrace();
-//                }
+//            case "sort":
+//                sortByName(request,response);
 //                break;
             default:
                 try {
@@ -47,12 +43,18 @@ public class UserServlet extends HttpServlet {
         }
     }
 
+    private void sortByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
+        userDAO.orderByName();
+        dispatcher.forward(request, response);
+    }
+
     private void showDeleteForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/delete.jsp");
         int id = Integer.parseInt(request.getParameter("id"));
         User user = userDAO.select(id);
-        request.setAttribute("deleteUser",user);
-        dispatcher.forward(request,response);
+        request.setAttribute("deleteUser", user);
+        dispatcher.forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -70,13 +72,17 @@ public class UserServlet extends HttpServlet {
 
     private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLDataException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
-        List<User> userList;
+        List<User> userList = null;
         String key = request.getParameter("key");
-        if (key ==null || key==""){
+        String sort = request.getParameter("sort");
+        if ((key == null || key == "") && (sort == null || sort == "")) {
             userList = userDAO.selectAll();
-        }else {
+        } else if (key != null && sort == null || sort == "") {
             userList = userDAO.findByCountry(key);
+        } else {
+            userList = userDAO.orderByName();
         }
+
         request.setAttribute("list", userList);
         dispatcher.forward(request, response);
     }
@@ -104,7 +110,7 @@ public class UserServlet extends HttpServlet {
                 break;
             case "delete":
                 try {
-                    deleteUser(request,response);
+                    deleteUser(request, response);
                 } catch (SQLDataException e) {
                     e.printStackTrace();
                 }
@@ -123,7 +129,7 @@ public class UserServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String country = request.getParameter("country");
-        userDAO.update(new User(id,name,email,country));
+        userDAO.update(new User(id, name, email, country));
         response.sendRedirect("/users");
     }
 

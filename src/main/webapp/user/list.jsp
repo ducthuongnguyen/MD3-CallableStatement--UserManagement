@@ -18,6 +18,7 @@
 <form action="/users">
     <input type="text" placeholder="Enter country ..." name="key">
     <button>Search</button>
+    <input type="submit" value="Sort by name" name="sort">
 </form>
 <c:forEach items="${list}" var="user">
     ${user.id}
