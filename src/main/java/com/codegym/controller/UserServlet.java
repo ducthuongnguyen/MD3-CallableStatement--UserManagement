@@ -72,7 +72,7 @@ public class UserServlet extends HttpServlet {
 
     private void showList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLDataException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
-        List<User> userList = null;
+        List<User> userList;
         String key = request.getParameter("key");
         String sort = request.getParameter("sort");
         if ((key == null || key == "") && (sort == null || sort == "")) {
