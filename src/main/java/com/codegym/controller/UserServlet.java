@@ -60,7 +60,8 @@ public class UserServlet extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/edit.jsp");
         int id = Integer.parseInt(request.getParameter("id"));
-        User user = userDAO.select(id);
+//        User user = userDAO.select(id);
+        User user = userDAO.getUserById(id);
         request.setAttribute("editUser", user);
         dispatcher.forward(request, response);
     }
@@ -137,7 +138,8 @@ public class UserServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String country = request.getParameter("country");
-        userDAO.insert(new User(name, email, country));
+//        userDAO.insert(new User(name, email, country));
+        userDAO.insertUserStore(new User(name,email,country));
         response.sendRedirect("/users");
     }
 }
